@@ -10,6 +10,14 @@ from .serializers import BookSerializer     # 시리얼라이저 불러오기
 def HelloAPI(request):
     return Response("hello world!")
 
+"""
+# CBV
+class HelloAPI(APIView):
+    def get(self, request):
+        return Response("hello world!")
+"""
+
+
 @api_view(['GET', 'POST'])              # GET/POST 요청을 처리하게 만들어주는 데코레이터
 def booksAPI(request):                  # /book/
 
@@ -24,6 +32,14 @@ def booksAPI(request):                  # /book/
             serializer.save()           # 시리얼라이저의 역직렬화를 통해 save(), 모델시리얼라이저의 기본 create() 함수가 동작
             return Response(serializer.data, status=status.HTTP_201_CREATED)    # 201 메시지를 보내며 성공!
         return Response(serializer.error, status=status.HTTP_400_BAD_REQUEST)   # 400 잘못된 요청!
+    
+
+# CBV
+class BooksAPI(APIView):
+    def get(self, request):
+        books = Book.objects.all()
+        serializer = BookSerializer(books, many=True)
+
     
 @api_view(['GET'])                      
 def bookAPI(request, bid) :     # /book/bid/
